@@ -1,0 +1,16 @@
+#!/bin/bash
+PUBIC_IP=$(curl -s ifconfig.co || curl -s ifconfig.me) > /dev/null
+echo $PUBIC_IP
+
+if [ -z $PUBIC_IP ];then
+echo "IP UPDATE FAILED FOR DDNS <your-ddns-domain> !!!!"
+exit
+
+else
+curl -s https://<username>:<password>@dynupdate.no-ip.com/nic/update?hostname=<replace-your-ddnd-domai-here>&myip=$PUBLIC_IP > /dev/null
+#eg : https://user123:Password123@dynupdate.no-ip.com/nic/update?hostname=test.ddns.net&myip=$PUBLIC_IP
+
+echo "IP UPDATED IN DDNS for <your-ddns-domain>"
+
+exit
+fi
