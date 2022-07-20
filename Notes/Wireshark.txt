@@ -1,0 +1,13 @@
+split pcap into samllerone
+tcpdump -r old_file -w new_files -C 100
+100mb size
+
+tcpdump -r old_file -w new_files -c 10000
+10000 sessions
+
+base on sessions
+tshark -r <pathtopcapfile> -R'diameter.Session-Id==""<sessionID>"' -t ad -w <newfilename>
+
+tshark -r /root/pcap_functionality_Cases/session_clear_02.pcap -R'diameter.Session-Id=="lab141_GY_02;2000025691"' -t ad -w /root/pcap_functionality_Cases/sessionclear_case_02.pcap
+
+
