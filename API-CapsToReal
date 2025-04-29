@@ -1,0 +1,29 @@
+#!/bin/bash
+##############################################################
+# Project       :                                            #
+# Description   :  REST API PARSER for Converting UPPERCASE  #
+#            Client Name in File to as per API Configuration #
+# Created by     : VAISHNAV PP  [https://github.com/Y2kz]    #
+# Date          : 28-04-2025                                 #
+##############################################################
+
+# Input/output files
+INPUT_FILE="<file_here>"
+OUTPUT_FILE="output.csv"
+
+# API details
+API_URL="https://<IP>:<PORT>/<END_POINT>"
+AUTH="Authorization: Basic <ENCODED_PASSWDORD>"
+
+# Get client names from API (UPPERCASE=OriginalCase) 
+client_map=$(curl -s --location "$API_URL" --header "$AUTH" | jq -r '.data[] | "\(.clientName|ascii_upcase)=\(.clientName)"')
+
+# Build sed expressions 
+sed_expr=""
+while IFS='=' read -r upper actual; do
+    sed_expr+="s/\b${upper},Gateway\b/${actual},Gateway/g;"
+done <<< "$client_map"
+
+# Run sed with constructed expression
+sed "$sed_expr" "$INPUT_FILE" > "$OUTPUT_FILE"
+echo "Processed file saved to $OUTPUT_FILE"
